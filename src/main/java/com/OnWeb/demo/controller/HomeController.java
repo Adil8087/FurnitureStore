@@ -17,14 +17,6 @@ import com.OnWeb.demo.pojos.Product;
 import com.OnWeb.demo.service.ICategoryService;
 import com.OnWeb.demo.service.IProductService;
 
-
-
-
-
-
-
-
-
 @RestController
 public class HomeController {
 
