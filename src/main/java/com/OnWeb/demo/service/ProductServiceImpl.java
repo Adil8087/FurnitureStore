@@ -1,6 +1,8 @@
 package com.OnWeb.demo.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +11,11 @@ import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.OnWeb.demo.pojos.Category;
 import com.OnWeb.demo.pojos.Product;
+import com.OnWeb.demo.pojos.ProductReview;
 import com.OnWeb.demo.repo.ICategoryRepo;
 import com.OnWeb.demo.repo.IProductRepo;
 
@@ -32,10 +36,12 @@ public class ProductServiceImpl implements IProductService{
 	}
 
 	@Override
-	public Product addProduct(Product product, int catId) {
+	public Product addProduct(Product product, int catId, MultipartFile imageFile) throws IOException {
 		Category category=iCategoryRepo.findById(catId).get();
 		product.setCreatedOn(LocalDate.now());
 		product.setCategories(category);
+		product.setImage(imageFile.getBytes());
+		product.setImageContentType(imageFile.getContentType());
 		return iProductRepo.save(product);
 	}
 
@@ -62,4 +68,14 @@ public class ProductServiceImpl implements IProductService{
 		return p.get();
 	}
 
+	@Override
+	public List<ProductReview> findReview(int pId) {
+		Optional<Product> p= iProductRepo.findById(pId);
+		if(p.isPresent())
+			return p.get().getReviews();
+		else
+		return new ArrayList<ProductReview>();
+	}
+
+	
 }

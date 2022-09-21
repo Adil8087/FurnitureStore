@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.OnWeb.demo.pojos.Product;
+import com.OnWeb.demo.pojos.ProductReview;
 import com.OnWeb.demo.service.ICategoryService;
 import com.OnWeb.demo.service.IProductService;
 
@@ -36,9 +39,9 @@ public class HomeController {
 	}
 	
 	@PostMapping("/add/{cat_id}")
-	public ResponseEntity<?> addProductInCategory(@RequestBody Product product, @PathVariable int cat_id) {
+	public ResponseEntity<?> addProductInCategory(@RequestBody Product product, @PathVariable int cat_id,@RequestParam MultipartFile imageFile) {
 		try {
-			Product added= iProductService.addProduct(product, cat_id);
+			Product added= iProductService.addProduct(product, cat_id,  imageFile);
 			return new ResponseEntity<Product>(added, HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,5 +79,14 @@ public class HomeController {
 		}
 	}
 	
+	
+	@GetMapping("/product/listReviews/{pId}")
+	public ResponseEntity<?> getAllReviewsOfProduct(@PathVariable int pId){
+		System.out.println("in get all gifts");
+		List<ProductReview> review = iProductService.findReview(pId);
+		if(review.size() == 0)
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<List<ProductReview>>(review, HttpStatus.OK);
+	}
 	
 }

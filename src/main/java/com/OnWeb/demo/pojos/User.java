@@ -64,4 +64,12 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<ProductReview> reviews = new ArrayList<>();
+	public void addAdress(Address address2) {
+		this.address.add(address2);
+		
+	}
+	public void removeAddress(Address address2) {
+		this.address.remove(address2);
+		
+	}
 }
